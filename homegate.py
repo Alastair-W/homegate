@@ -38,24 +38,17 @@ def scraper():
         rooms = prop.find('span', class_='ListItemRoomNumber_value_Hpn8O')
         if 'ListItemPrice_price_1o0i3' in str(prop.contents):
             rentList.append(rent.text)
-            print(rent.text)
         else:
             rentList.append('empty')
-            print('empty')
-
         if 'ListItemLivingSpace_value_2zFir' in str(prop.contents):
             sizeList.append(size.contents[0])
-            print(size.contents[0])
         else:
             sizeList.append('empty')
-            print('empty')
 
         if 'ListItemRoomNumber_value_Hpn8O' in str(prop.contents):
             roomList.append(rooms.text)
-            print(rooms.text)
         else:
             roomList.append('empty')
-            print('empty')
 
     print(f'Page {p}:', len(rentList), len(sizeList), len(roomList))
 
