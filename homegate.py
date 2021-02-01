@@ -106,10 +106,9 @@ print(f'List of properties with a rental price: {len(rentList)}')
 print(f'List of properties with sq m listed: {len(sizeList)}')
 print(f'List of properties with number of rooms listed: {len(roomList)}')
 
+myDict = {}
+myDict['Rent'] = rentList
+myDict['Size'] = sizeList
+myDict['Rooms'] = roomList
 
-print(rentList)
-print(sizeList)
-print(roomList)
-
-
-
+print(myDict)
