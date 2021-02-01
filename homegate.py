@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import math
 
 # declare a variable that contains the url to be scraped - as these results will be over mutiple pages this will be the first page
-url = 'https://www.homegate.ch/rent/real-estate/matching-list?loc=geo-city-geneve%2Cgeo-region-rive-droite-lac%2Cgeo-city-nyon%2Cgeo-region-rive-droite-campagne%2Cgeo-region-rive-gauche%2Cgeo-region-rhone-arve'
+url = 'https://www.homegate.ch/rent/real-estate/region-rivedroitelac/matching-list'
 # use the 'requests' library to make a 'get' call for that webpage
 page = requests.get(url)
 # parse the web page content using the BeautifulSoup library
@@ -17,6 +17,9 @@ totalListings = soup.find('span', class_="ResultsNumber_results_3cf8J ResultList
 listingsInt = int(totalListings.text[:-8])
 # print total count of listings
 print(listingsInt)
+# num of last page of results
+lastPage = listingsInt%20
+print(listingsInt%20)
 # as each page contains a maximum of 20 results, divide by 20 and then round up to get the total number of pages that the scraper needs to loop through
 numPages = math.ceil(listingsInt/20)
 # print the result to confirm it worked
@@ -27,8 +30,10 @@ rentList = []
 sizeList = []
 roomList = []
 
+time.sleep(3)
+
 # navigate the tags on the page containing price, size and room number
-propertyInfo = soup.find_all('div', class_="ListItemTopPremium_data_3i7Ca")
+propertyInfo = soup.find_all('div', class_="ListItem_data_18_z_")
 print(f'number of instances of property data tag: {len(propertyInfo)}')
 p=1
 def scraper():
@@ -63,12 +68,10 @@ scraper()
 # the tag containing the room data has multiple items but we only want the first one
 # now we loop through the remaining results pages by adding '?ep=' and then the page number that starts at 2
 
-# the following line is the full script but I am using a smaller range to test it
 for n in range(2,numPages+1):
-# for n in range(2,5):
-    ind = "ep="+str(n)+"&"
+    ind = "?ep="+str(n)
     # create a new variable with the url being created dynamically as we loop through each results page
-    newUrl = f'https://www.homegate.ch/rent/real-estate/matching-list?{ind}loc=geo-city-geneve%2Cgeo-region-rive-droite-lac%2Cgeo-city-nyon%2Cgeo-region-rive-droite-campagne%2Cgeo-region-rive-gauche%2Cgeo-region-rhone-arve'
+    newUrl = f'https://www.homegate.ch/rent/real-estate/region-rivedroitelac/matching-list{ind}'
     print(newUrl)
     # Create driver and identify which browser to 'drive'
     driver = webdriver.Firefox()
@@ -77,22 +80,34 @@ for n in range(2,numPages+1):
     # wait 3 seconds cos sometimes not all elements are ready
     time.sleep(5)  
     # create a loop that updates the element to scroll to by 1 in each iteration so that we trigger the JS for every listing on the page (there are 20 per page)
-    for i in range(1,21):
-    # Get element using xPath because cant use a distinct HTML tag with a variable that takes the count of each iteration of the loop
-        element = driver.find_element_by_xpath(f'//*[@id="app"]/main/div[2]/div/div[3]/div[2]/div[{i}]/a/div/div[2]')
-    # Create action chain object
-        action = ActionChains(driver)
-    # Scroll down to the element on the page to load the listing container first
-        driver.execute_script("arguments[0].scrollIntoView(true);",element)  
-    # move to each element in the listings to execute the JS and load the content
-        action.move_to_element(element).perform()
-    # wait 1 second cos sometimes not all elements are ready
-        time.sleep(1)  
-    # parse the whole web page(s) content using the BeautifulSoup library
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    # loop through the page to find the elements with rent information and add that to a list
-    propertyInfo = soup.find_all('div', class_='ListItem_data_18_z_')
-    # overwrite the variable used at the very top with the number of the results page
+    # on the last page stop the loop on the last listing (which is less than 20)
+    if n == numPages:
+        for i in range(1,lastPage):
+        # Get element using xPath because cant use a distinct HTML tag with a variable that takes the count of each iteration of the loop
+            element = driver.find_element_by_xpath(f'//*[@id="app"]/main/div[2]/div/div[3]/div[2]/div[{i}]/a/div/div[2]')
+        # Create action chain object
+            action = ActionChains(driver)
+        # Scroll down to the element on the page to load the listing container first
+            driver.execute_script("arguments[0].scrollIntoView(true);",element)  
+        # move to each element in the listings to execute the JS and load the content
+            action.move_to_element(element).perform()
+        # wait 1 second cos sometimes not all elements are ready
+            time.sleep(1)  
+        # parse the whole web page(s) content using the BeautifulSoup library
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        # loop through the page to find the elements with rent information and add that to a list
+        propertyInfo = soup.find_all('div', class_='ListItem_data_18_z_')
+        # overwrite the variable used at the very top with the number of the results page
+    else:
+        for i in range(1,21):
+            element = driver.find_element_by_xpath(f'//*[@id="app"]/main/div[2]/div/div[3]/div[2]/div[{i}]/a/div/div[2]')
+            action = ActionChains(driver)
+            driver.execute_script("arguments[0].scrollIntoView(true);",element)  
+            action.move_to_element(element).perform()
+            time.sleep(1)  
+        
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        propertyInfo = soup.find_all('div', class_='ListItem_data_18_z_')
     p = n
     scraper()
     
