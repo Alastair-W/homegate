@@ -7,7 +7,7 @@ import math
 import csv
 
 # declare a variable that contains the url to be scraped - as these results will be over mutiple pages this will be the first page
-url = 'https://www.homegate.ch/rent/real-estate/region-nyon/matching-list'
+url = 'https://www.homegate.ch/rent/real-estate/region-geneva/matching-list?ep=25'
 # use the 'requests' library to make a 'get' call for that webpage
 page = requests.get(url)
 # parse the web page content using the BeautifulSoup library
@@ -72,23 +72,24 @@ scraper()
 # the tag containing the room data has multiple items but we only want the first one
 # now we loop through the remaining results pages by adding '?ep=' and then the page number that starts at 2
 
-for n in range(2,numPages+1):
+# for n in range(2,numPages+1):
+for n in range(26,30):
     ind = "?ep="+str(n)
     # create a new variable with the url being created dynamically as we loop through each results page
-    newUrl = f'https://www.homegate.ch/rent/real-estate/region-nyon/matching-list{ind}'
+    newUrl = f'https://www.homegate.ch/rent/real-estate/region-geneva/matching-list{ind}'
     print(newUrl)
     # Create driver and identify which browser to 'drive'
     driver = webdriver.Firefox()
     # Get a page
     driver.get(newUrl)
     # wait 3 seconds cos sometimes not all elements are ready
-    time.sleep(5)  
+    time.sleep(1)  
     # create a loop that updates the element to scroll to by 1 in each iteration so that we trigger the JS for every listing on the page (there are 20 per page)
     # on the last page stop the loop on the last listing (which is less than 20)
     if n == numPages:
         for i in range(1,lastPage):
         # wait 1 second cos sometimes not all elements are ready
-            time.sleep(2) 
+            time.sleep(1) 
         # Get element using xPath because cant use a distinct HTML tag with a variable that takes the count of each iteration of the loop
             element = driver.find_element_by_xpath(f'//*[@id="app"]/main/div[2]/div/div[3]/div[2]/div[{i}]/a/div/div[2]')
         # Create action chain object
@@ -102,7 +103,7 @@ for n in range(2,numPages+1):
         
     else:
         for i in range(1,21):
-            time.sleep(2) 
+            time.sleep(1) 
             element = driver.find_element_by_xpath(f'//*[@id="app"]/main/div[2]/div/div[3]/div[2]/div[{i}]/a/div/div[2]')
             action = ActionChains(driver)
             driver.execute_script("arguments[0].scrollIntoView(true);",element)  
@@ -131,7 +132,7 @@ myDict['Size'] = sizeList
 myDict['Rooms'] = roomList
 
 zd = zip(*myDict.values())
-with open('nyon.csv', 'w') as file:
+with open('geneva5.csv', 'w') as file:
     writer = csv.writer(file, delimiter=',')
     writer.writerow(myDict.keys())
     writer.writerows(zd)

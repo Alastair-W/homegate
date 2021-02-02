@@ -1,6 +1,6 @@
 List of urls per search:
 (Regions)
-Nyon
+Nyon (nyon.csv)
 https://www.homegate.ch/rent/real-estate/region-nyon/matching-list
 
 Rhone-Arve (rhoneArve.csv)
