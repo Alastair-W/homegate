@@ -1,0 +1,19 @@
+List of urls per search:
+(Regions)
+Nyon
+https://www.homegate.ch/rent/real-estate/region-nyon/matching-list
+
+Rhone-Arve (rhoneArve.csv)
+https://www.homegate.ch/rent/real-estate/region-rhonearve/matching-list
+
+Geneva
+https://www.homegate.ch/rent/real-estate/region-geneva/matching-list
+
+Rive Droit-Lac (riveDriot.csv)
+https://www.homegate.ch/rent/real-estate/region-rivedroitelac/matching-list
+
+Rive Driot-Campagne (riveDriot.csv)
+https://www.homegate.ch/rent/real-estate/region-rivedroitecampagne/matching-list
+
+Rive Gauche (riveGauche.csv)
+https://www.homegate.ch/rent/real-estate/region-rivegauche/matching-list
