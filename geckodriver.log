@@ -1912,3 +1912,4 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 1612284621482	Marionette	INFO	Listening on port 61122
 1612284621527	Marionette	WARN	TLS certificate errors will be ignored for this session
 1612284633010	Marionette	INFO	Stopped listening on port 61122
+1612325279429	Marionette	INFO	Stopped listening on port 59630
