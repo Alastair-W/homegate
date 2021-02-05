@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 import math
 import csv
 
-# declare a variable that contains the url to be scraped - as these results will be over mutiple pages this will be the first page
+# declare a variable that contains the url to be scraped - 
+# as these results will be over mutiple pages this will be the first page
 url = 'https://www.homegate.ch/rent/real-estate/region-geneva/matching-list?ep=25'
 # use the 'requests' library to make a 'get' call for that webpage
 page = requests.get(url)
